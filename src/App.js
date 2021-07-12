@@ -1,10 +1,34 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
+
+import { Cards, Chart, CountryPicker } from './components';
+
+import apiFetchData from './api/apiFetchData';
+
+import styles from './App.module.css';
 
 const App = () => {
+	const [data, setData] = useState({});
+
+	// FETCH DATA FROM API.FETCHDATA
+	const fetchedData = async () => {
+		try {
+			const data = await apiFetchData();
+			setData(data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	useEffect(() => {
+		fetchedData();
+	}, []);
+
 	return (
-		<Fragment>
-			<h1>This is App page</h1>
-		</Fragment>
+		<div className={styles.container}>
+			<Cards data={data} />
+			<CountryPicker />
+			<Chart />
+		</div>
 	);
 };
 
