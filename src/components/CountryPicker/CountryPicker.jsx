@@ -1,11 +1,33 @@
-import React, { Fragment } from 'react';
-//import styles from './Cards.module.css';
+import React, { useState, useEffect } from 'react';
+import fetchCountries from '../../api/apiCountries';
+import styles from './CountryPicker.module.css';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import FormControl from '@material-ui/core/FormControl';
 
-const CountryPicker = () => {
+const CountryPicker = ({ handleCountryChange }) => {
+	const [fetchedCountries, setFetchedCountries] = useState([]);
+
+	useEffect(() => {
+		const fetchAPI = async () => {
+			setFetchedCountries(await fetchCountries());
+		};
+		fetchAPI();
+	}, [setFetchedCountries]);
+
 	return (
-		<Fragment>
-			<h1>CountryPicker component</h1>
-		</Fragment>
+		<FormControl className={styles.formControl}>
+			<NativeSelect
+				defaultValue=''
+				onChange={(e) => handleCountryChange(e.target.value)}
+			>
+				<option value=''>Global</option>
+				{fetchedCountries.map((country, index) => (
+					<option key={index} value={country}>
+						{country}
+					</option>
+				))}
+			</NativeSelect>
+		</FormControl>
 	);
 };
 
